@@ -1,0 +1,18 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Новости: InvestStart</title><meta name="theme-color" content="#fbfbfa"><link rel="stylesheet" href="assets/style.css"></head><body data-p="news"><section style="padding-top:40px"><div class="wrap"><h2>Новости и ваш портфель</h2><p class="lead mb">Точки на графике показывают, как новость повлияла на стоимость портфеля. Лента и стоимость обновляются в реальном времени.</p><div class="g3 mb" id="sum"></div>
+<div class="card mb"><div class="hd"><div><div class="k">Стоимость портфеля, 130 дней</div><div class="bal" id="nb"></div></div><div class="row" style="font-size:12px"><span class="up">● рост после новости</span><span class="dn">● падение</span></div></div><div class="chart" id="nc"></div></div><div class="chips mb" id="fl"></div><div class="stack" id="nl"></div></div></section><script src="assets/app.js"></script><script>READY.then(()=>{shell();
+const S=130,o=N-S,sg=v=>(v>=0?'+':'−')+rub(Math.abs(v));let f='Все';
+function renderAll(){
+  $('#nb').textContent=rub(TOT);
+  line($('#nc'),{s:[{d:PV.slice(o),c:'#0071e3',a:1}],l:L.slice(o),m:NEWS.map((n,i)=>({id:i,i:n.i-o,c:n.v>=0?'#15803d':'#d92d20'})),tf:i=>{const w=NEWS.find(n=>n.i-o==i);return`<span class="mut">${L[o+i]}</span> <b>${rub(PV[o+i])}</b>`+(w?`<br>${w.t.slice(0,38)}… <b class="${cls(w.v)}">${sg(w.v)}</b>`:'')},onM:go});
+  const U=NEWS.filter(n=>n.v>0),D_=NEWS.filter(n=>n.v<0),B=[...NEWS].sort((a,b)=>Math.abs(b.v)-Math.abs(a.v))[0];
+  $('#sum').innerHTML=[['Новости с ростом',U.length+' · '+sg(U.reduce((s,n)=>s+n.v,0)),'up'],['Новости с падением',D_.length+' · '+sg(D_.reduce((s,n)=>s+n.v,0)),'dn'],['Сильнее всего повлияла',B?B.t:'—',B?cls(B.v):'']].map(c=>`<div class="card stat"><span>${c[0]}</span><b class="${c[2]}" style="font-size:18px;margin-top:4px">${c[1]}</b></div>`).join('');
+  const FL=['Все','Рост','Падение',...new Set(NEWS.map(n=>n.cat))];
+  $('#fl').innerHTML=FL.map(x=>`<button class="chip t ${x==f?'on':''}">${x}</button>`).join('');
+  $$('#fl .chip').forEach(b=>b.onclick=()=>{f=b.textContent;$$('#fl .chip').forEach(x=>x.classList.toggle('on',x==b));ren()});
+  ren();
+}
+function ren(){$('#nl').innerHTML=NEWS.map((n,i)=>[n,i]).filter(([n])=>f=='Все'||(f=='Рост'?n.v>=0:f=='Падение'?n.v<0:n.cat==f)).map(([n,i])=>`<div class="card news" id="n${i}"><div class="nd"><b>${n.date.getDate()}</b><span>${fd(n.date).split(' ')[1]}</span></div><div><div class="row" style="gap:8px;margin-bottom:6px"><span class="tag b">${n.cat}</span><span class="mut" style="font-size:12px">${n.src?n.src+' · ':''}${n.d?n.d+' дн. назад':'сегодня'}</span></div><h3>${n.link?`<a href="${n.link}" target="_blank" rel="noopener">${n.t}</a>`:n.t}</h3><p class="mut mt8" style="font-size:14px">${n.x}</p><div class="row mt" style="gap:8px">${n.per.map(p=>`<span class="tag ${cls(p.r)}">${ic(p.a,16)} ${p.a.t} ${pc(p.r,1)}</span>`).join('')}</div><div class="aiq"><b style="color:var(--acc)">✦ AI:</b> ${n.ai}</div></div><div class="imp"><span class="k">Ваш портфель</span><b class="${cls(n.v)}">${sg(n.v)}</b><span class="tag ${cls(n.r)}">${pc(n.r)}</span></div></div>`).join('')}
+function go(i){f='Все';$$('#fl .chip').forEach((x,j)=>x.classList.toggle('on',j==0));ren();const e=$('#n'+i);if(!e)return;e.scrollIntoView({behavior:'smooth',block:'center'});e.classList.add('hl');setTimeout(()=>e.classList.remove('hl'),2200)}
+renderAll();
+onLiveUpdate(renderAll);
+});</script></body></html>

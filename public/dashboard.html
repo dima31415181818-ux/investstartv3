@@ -1,0 +1,220 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Личный кабинет: InvestStart</title><meta name="theme-color" content="#fbfbfa"><link rel="stylesheet" href="assets/style.css"></head><body data-p="dashboard"><style>.hid .hv{filter:blur(9px);user-select:none}.sw{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}.sw input{width:18px;height:18px;accent-color:var(--acc)}.kv{display:flex;justify-content:space-between;font-size:14px;padding-bottom:10px;border-bottom:1px solid var(--line)}.kv span{color:var(--mut)}
+.pfg{display:grid;grid-template-columns:2fr 1fr 1fr auto;gap:10px;align-items:end}.pfg label{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--mut)}
+.pfg input,.pfg select,.pin,.tin{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;outline:0;width:100%;min-width:0;color:var(--txt)}
+.pfg input:focus,.pfg select:focus,.pin:focus,.tin:focus{border-color:var(--acc);background:#fff}
+.pfc{grid-column:1/-1;display:none;grid-template-columns:2fr 1fr 1fr 1fr;gap:10px}.pfc.on{display:grid}
+.pin{width:110px;text-align:right;padding:7px 10px}.xb{background:none;border:0;color:var(--dn);cursor:pointer;font-size:20px;line-height:1;padding:4px 8px}
+.pfb{border:1px solid rgba(0,113,227,.25);background:linear-gradient(135deg,rgba(0,113,227,.06),rgba(94,92,230,.04))}
+.ttabs{display:grid;grid-template-columns:1fr 1fr;background:var(--card2);border:1px solid var(--line);border-radius:11px;padding:3px;gap:4px}
+.ttabs button{border:0;background:none;padding:8px;border-radius:8px;font-weight:600;font-size:14px;cursor:pointer;color:var(--mut);transition:.15s}
+.ttabs button.buy.on{background:var(--up);color:#fff}
+.ttabs button.sell.on{background:var(--dn);color:#fff}
+.qpct{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.qpct button{background:var(--card2);border:1px solid var(--line);border-radius:8px;padding:5px;font-size:12px;font-weight:500;cursor:pointer;color:var(--mut)}
+.qpct button:hover{border-color:var(--txt);color:var(--txt)}
+@media(max-width:720px){.pfg,.pfc.on{grid-template-columns:1fr 1fr}.pfg .w2,.pfg button{grid-column:1/-1}.pin{width:84px}}</style>
+<div class="dash"><aside class="side" id="sd"></aside><main class="main">
+<div class="top"><div class="prof"><div class="ava">АК</div><div><b>Алексей Кузнецов</b><div class="mut" style="font-size:13px">Виртуальный счёт · профиль «Умеренный» · риск <span id="rk"></span>/10</div></div></div><div class="row"><button class="ib" id="eye" title="Скрыть суммы"></button><button class="ib" id="bl" title="Уведомления"></button></div></div>
+
+<div class="pane" id="p-ov"><div class="card mb pfb" id="pfb"><div class="row" style="justify-content:space-between;gap:12px;flex-wrap:wrap"><div><b>Это демо-портфель</b><div class="mut" style="font-size:13px">Совершайте сделки в торговом терминале или внесите свои активы — баланс и графики обновляются в реальном времени.</div></div><div class="row"><a class="btn sm" data-go="tr">Открыть терминал</a><a class="btn gh sm" data-go="pf">Внести активы</a></div></div></div><div class="card mb"><div class="hd"><div><div class="k">Общий баланс</div><div class="bal hv" id="bal"></div><div class="row mt8" style="gap:8px"><span class="tag" id="dch"></span><span class="mut hv" style="font-size:13px" id="pnl"></span></div></div><div class="seg" id="per"></div></div><div class="chart" id="pc"></div></div><div class="g4 mb" id="kp"></div>
+<div class="dgrid mb"><div class="card"><div class="hd"><h3>Мои активы</h3><div class="row"><a class="btn sm" data-go="tr">Торговать</a><a class="btn gh sm" data-go="as">Все активы</a></div></div><div class="tw"><table class="tbl"><thead><tr><th>Актив</th><th class="r">Цена</th><th class="r hm">7 дней</th><th class="r">Стоимость</th></tr></thead><tbody id="tb"></tbody></table></div></div><div class="card"><h3>Распределение</h3><div class="gauge mt" id="dn"></div><div class="legend" id="lg"></div></div></div>
+<div class="card"><div class="hd"><h3>✦ Советы AI на сегодня</h3><a class="btn gh sm" data-go="ai">Спросить AI</a></div><div class="stack" id="tp"></div></div></div>
+
+<div class="pane" id="p-tr"><div class="chips mb" id="tch"></div><div class="dgrid mb"><div class="card"><div class="hd"><div class="asset" id="th"></div><div class="seg" id="tper"></div></div><div class="row" style="align-items:baseline;gap:12px"><div class="bal" id="tp-px"></div><span class="tag" id="tpc"></span><span class="mut" style="font-size:12px;margin-left:auto" id="tsrc"></span></div><div class="chart mt" id="tcs"></div></div>
+<div class="card"><div class="ttabs mb"><button type="button" class="buy on" id="t-buy">Купить</button><button type="button" class="sell" id="t-sell">Продать</button></div>
+<div class="kv mb"><span>Доступно на счёте</span><b class="hv" id="t-cash"></b></div>
+<div class="kv mb"><span>В портфеле</span><b class="hv" id="t-pos"></b></div>
+<form id="tform" class="stack">
+<div><div class="row" style="justify-content:space-between;margin-bottom:6px"><label class="mut" style="font-size:12px" id="t-qlbl">Количество</label><button type="button" id="t-mode" style="background:none;border:0;color:var(--acc);font-size:12px;font-weight:500;cursor:pointer">Ввести в ₽</button></div><input class="tin" id="tq" type="number" min="0" step="any" inputmode="decimal" placeholder="0"></div>
+<div class="qpct"><button type="button" data-p="0.25">25%</button><button type="button" data-p="0.5">50%</button><button type="button" data-p="0.75">75%</button><button type="button" data-p="1">100%</button></div>
+<div class="kv"><span>Итого по рынку</span><b class="hv" id="t-sum">0 ₽</b></div>
+<button class="btn up" id="t-sub" style="width:100%;padding:12px">Купить</button>
+</form></div></div>
+<div class="card"><div class="hd"><h3>История демо-сделок</h3><span class="mut" style="font-size:13px" id="tr-cnt"></span></div><div class="tw"><table class="tbl"><thead><tr><th>Время</th><th>Операция</th><th>Инструмент</th><th class="r">Кол-во</th><th class="r">Цена</th><th class="r">Сумма</th></tr></thead><tbody id="tr-tb"></tbody></table></div></div></div>
+
+<div class="pane" id="p-as"><div class="chips mb" id="ach"></div><div class="dgrid mb"><div class="card"><div class="hd"><div class="asset" id="ah"></div><div class="seg" id="aper"></div></div><div class="bal" id="ap"></div><div class="mb mt8"><span class="tag" id="apc"></span></div><div class="chart" id="acs"></div></div><div class="card"><div class="hd"><h3>Позиция</h3><button class="btn sm" id="ago-tr">Купить / Продать</button></div><div class="stack" id="ainf"></div><div class="aiq" id="aai"></div></div></div>
+<div class="card"><div class="tw"><table class="tbl"><thead><tr><th>Актив</th><th class="r">Кол-во</th><th class="r hm">Ср. цена</th><th class="r">Стоимость</th><th class="r">P/L</th><th class="r hm">30 дней</th></tr></thead><tbody id="atb"></tbody></table></div></div></div>
+
+<div class="pane" id="p-pf"><div class="card mb"><h3>Мой портфель</h3><div class="mut mb" style="font-size:13px" id="pfm"></div>
+<form id="pfa" class="pfg"><label class="w2">Актив<select id="pfs"></select></label>
+<div class="pfc" id="pfc"><label>Название<input id="pfn" maxlength="40" placeholder="Например, Норникель"></label><label>Тикер<input id="pft" maxlength="10" placeholder="GMKN"></label><label>Класс<select id="pfk"></select></label><label>Цена сейчас, ₽<input id="pfp" type="number" min="0" step="any" inputmode="decimal"></label></div>
+<label>Количество<input id="pfq" type="number" min="0" step="any" inputmode="decimal" placeholder="0"></label><label>Цена покупки, ₽<input id="pfv" type="number" min="0" step="any" inputmode="decimal"></label><button class="btn">Добавить</button></form></div>
+<div class="card mb"><div class="hd"><h3>Состав</h3><span class="mut" style="font-size:13px" id="pfsum"></span></div><div class="tw"><table class="tbl"><thead><tr><th>Актив</th><th class="r">Кол-во</th><th class="r">Ср. цена, ₽</th><th class="r hm">Стоимость</th><th></th></tr></thead><tbody id="pft2"></tbody></table></div>
+<div class="row mt" style="gap:10px;flex-wrap:wrap"><button class="btn" id="pfsave">Сохранить и пересчитать</button><button class="btn gh" id="pfreset">Вернуть демо-портфель</button></div></div>
+<p class="mut" style="font-size:13px">Данные хранятся только в этом браузере. Для своего актива, которого нет в списке, история цены моделируется по типичной волатильности его класса, поэтому график по нему примерный.</p></div>
+
+<div class="pane" id="p-an"><div class="card mb"><div class="hd"><div><h3>Рост активов</h3><div class="mut" style="font-size:13px">Изменение цены в % от начала периода</div></div><div class="seg" id="cper"></div></div><div class="chips mb" id="cch"></div><div class="chart" id="cc"></div></div><div class="g2"><div class="card"><h3 class="mb">Прибыль по активам</h3><div class="stack" id="pb"></div></div><div class="card"><h3 class="mb">Риск портфеля</h3><div id="rg"></div></div></div></div>
+
+<div class="pane" id="p-ai"><div class="dgrid"><div class="card"><div class="hd"><h3>✦ AI-советник</h3><span class="tag up">онлайн</span></div><div class="stack" id="chat" style="max-height:420px;overflow:auto"></div><div class="chips mt" id="qq"></div><form id="cf" class="row mt" style="flex-wrap:nowrap"><input id="ci" placeholder="Спросите о портфеле или рынке…" style="flex:1;min-width:0;background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:11px 14px;outline:0"><button class="btn">➤</button></form></div><div class="card"><h3 class="mb">Рынок сейчас</h3><div class="stack" id="mk"></div></div></div><div class="card mt"><h3 class="mb">Все рекомендации</h3><div class="stack" id="tp2"></div></div></div>
+
+<div class="pane" id="p-st"><div class="card" style="max-width:640px"><h3 class="mb">Настройки</h3><div class="k mt mb">Профиль риска</div><div class="chips mb" id="spf"></div><label class="sw">Уведомлять о новостях по моим активам<input type="checkbox" checked></label><label class="sw">Еженедельный AI-отчёт<input type="checkbox" checked></label><label class="sw">Предупреждать о перекосе портфеля<input type="checkbox" checked></label><button class="btn gh mt" id="st-reset">Сбросить демо-счёт и сделки</button></div></div>
+</main></div><script src="assets/app.js"></script><script>READY.then(()=>{shell();
+const sg=v=>(v>=0?'+':'−')+rub(Math.abs(v));
+const T=[['ov','Обзор','home'],['tr','Терминал','trade'],['as','Активы','list'],['pf','Мой портфель','pie'],['an','Аналитика','chart'],['ai','AI-советник','ai'],['st','Настройки','gear']];
+$('#sd').innerHTML='<div class="k sl" style="padding:0 12px 10px">Кабинет</div>'+T.map(t=>`<a data-t="${t[0]}">${svg(t[2])}<span>${t[1]}</span></a>`).join('')+`<a class="sx" href="index.html">${svg('out')}<span>Выход</span></a>`;
+$('#eye').innerHTML=svg('eye',18);$('#bl').innerHTML=svg('bell',18)+'<i class="dot"></i>';
+$('#eye').onclick=()=>document.body.classList.toggle('hid');$('#bl').onclick=()=>toast('Новое: '+NEWS[0].t);
+function seg(el,def,cb){const P=[['1Н',7],['1М',30],['3М',90],['6М',180],['1Г',365]];el.innerHTML=P.map(p=>`<button class="${p[1]==def?'on':''}" data-d="${p[1]}">${p[0]}</button>`).join('');el.querySelectorAll('button').forEach(b=>b.onclick=()=>{el.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x==b));cb(+b.dataset.d)})}
+const DR={};let pd=90,ad=90,td=90,cd=180,cur=(A.find(a=>a.k!='cash')||A[0]).t,tcur=cur,tside='buy',tbyRub=false;
+const sel=new Set(A.filter(a=>a.k!='cash').slice(0,4).map(a=>a.t));
+function activeTab(){const id=location.hash.slice(1);return T.find(t=>t[0]==id)?id:'ov'}
+function tab(id){if(!T.find(t=>t[0]==id))id='ov';$$('.side a[data-t]').forEach(a=>a.classList.toggle('on',a.dataset.t==id));$$('.pane').forEach(p=>p.classList.toggle('on',p.id=='p-'+id));DR[id]&&DR[id]();history.replaceState(null,'','#'+id);scrollTo(0,0)}
+$$('.side a[data-t]').forEach(a=>a.onclick=()=>tab(a.dataset.t));$$('[data-go]').forEach(b=>b.onclick=()=>tab(b.dataset.go));
+
+function tips(){const SH=share(),RS=risk(),g=k=>(SH.find(x=>x.k==k)||{w:0}).w,t=[],cr=g('crypto'),ca=g('cash'),s=A.filter(a=>a.k!='cash').sort((a,b)=>b.c30-a.c30),b=s[0],w=s[s.length-1],n=NEWS[0];
+if(cr>.12)t.push(['warn','!',`Криптовалюта занимает ${fm(cr*100,1)}% портфеля`,'Для умеренного профиля обычно советуют не больше 10–15%. Можно зафиксировать часть прибыли по BTC и перевести её в облигации.']);
+if(n)t.push(['','i','Новость дня: '+n.t,n.ai]);
+if(b)t.push(['good','↑',`${b.n}: лидер месяца, ${pc(b.c30,1)}`,'Рост приятен, но это не повод докупать на пике. Если доля актива выросла, подумайте о ребалансировке.']);
+if(w&&w!==b&&w.c30<0)t.push(['bad','↓',`${w.n} за месяц: ${pc(w.c30,1)}`,'Просадка одного актива — нормальная часть инвестиций. Проверьте, изменилась ли причина, по которой вы его покупали.']);
+if(ca>.03&&AT.RUB)t.push(['warn','₽',`${rub(AT.RUB.val)} лежат без дела`,'Свободные рубли теряют в цене из-за инфляции. Короткие ОФЗ или фонд денежного рынка дадут доходность около ключевой ставки.']);
+const big=[...A].sort((x,y)=>y.val-x.val)[0];if(big&&big.k!='cash'&&big.val/(TOT||1)>.4)t.push(['warn','!',`${big.n}: ${fm(big.val/(TOT||1)*100,1)}% портфеля`,'Большая доля одного актива повышает риск. Обычно в одну бумагу вкладывают не больше 20–25% портфеля.']);
+if(A.filter(a=>a.k!='cash').length<4)t.push(['','i','Мало активов в портфеле','Чем меньше активов, тем сильнее портфель зависит от каждого. Фонд на индекс даёт сразу десятки компаний одной покупкой.']);
+t.push(['','✦',`Риск портфеля: ${RS} из 10`,RS>6?'Портфель агрессивнее вашего профиля. Увеличьте долю облигаций и золота.':'Риск соответствует умеренному профилю. Продолжайте регулярные пополнения.']);return t}
+const tipH=t=>`<div class="ai ${t[0]}"><div class="ag">${t[1]}</div><div><b>${t[2]}</b><p>${t[3]}</p></div></div>`;let TP=(!USERPF&&LIVE&&LIVE.tips&&LIVE.tips.length)?LIVE.tips:tips();
+if(USERPF&&LIVE&&LIVE.ai)api('/ai/tips',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ctx:ctxC()}),t:40000}).then(r=>{if(r&&r.tips&&r.tips.length){TP=r.tips;const c=activeTab();DR[c]&&DR[c]()}}).catch(()=>{});
+
+DR.ov=()=>{const RS=risk(),SH=share();$('#rk').textContent=RS;
+const dc=PV[N-2]>0?PV[N-1]/PV[N-2]-1:0;$('#bal').textContent=rub(TOT);$('#dch').className='tag '+cls(dc);$('#dch').textContent=pc(dc)+' за день';$('#pnl').innerHTML=`Прибыль за всё время: <b class="${cls(TOT-INV)}">${sg(TOT-INV)}</b>`;
+const pch=d=>{pd=d;const s=PV.slice(-d);line($('#pc'),{s:[{d:s,c:s[s.length-1]>=s[0]?'#15803d':'#d92d20',a:1}],l:L.slice(-d)})};seg($('#per'),pd,pch);pch(pd);
+$('#kp').innerHTML=[['Вложено',rub(INV),'hv'],['Прибыль / убыток',sg(TOT-INV)+' · '+pc(INV>0?TOT/INV-1:0,1),cls(TOT-INV)+' hv'],['Волатильность, год',fm(vol(PV)*100,1)+'%',''],['Макс. просадка',pc(mdd(PV),1),'dn']].map(k=>`<div class="card stat"><span>${k[0]}</span><b class="${k[2]}" style="font-size:19px">${k[1]}</b></div>`).join('');
+$('#tb').innerHTML=[...A].sort((a,b)=>b.val-a.val).map(a=>{const w=a.h.slice(-8);return`<tr data-a="${a.t}"><td><div class="asset">${ic(a)}<div><b>${a.t}</b><small>${a.n}</small></div></div></td><td class="r">${price(a.p)}<br><small class="${cls(a.ch)}">${pc(a.ch)}</small></td><td class="r hm">${spark(w,w[7]>=w[0]?'#15803d':'#d92d20')}</td><td class="r hv"><b>${rub(a.val)}</b><br><small class="mut">${fm(a.val/(TOT||1)*100,1)}%</small></td></tr>`}).join('');
+$$('#tb tr').forEach(r=>r.onclick=()=>{cur=r.dataset.a;tcur=cur==='RUB'?'SBER':cur;tab('as')});
+donut($('#dn'),SH,['Активов',''+A.length]);$('#lg').innerHTML=SH.map(x=>`<div><i style="background:${x.c}"></i>${x.n}<b>${fm(x.w*100,1)}%</b></div>`).join('');$('#tp').innerHTML=(USERPF?tips():TP).slice(0,3).map(tipH).join('')};
+
+function trCalc(){
+  const a=AT[tcur];if(!a)return;
+  const raw=Math.max(0,+$('#tq').value||0);
+  const qty=tbyRub?(a.p>0?raw/a.p:0):raw;
+  const sum=tbyRub?raw:raw*a.p;
+  $('#t-sum').textContent=rub(sum,sum<100?2:0)+(tbyRub&&qty>0?` (${fm(qty,qty<1?4:2)} шт.)`:'');
+}
+function trSel(){
+  const trAssets=ALL.filter(a=>a.k!=='cash');
+  if(!AT[tcur]||AT[tcur].k==='cash')tcur=trAssets[0].t;
+  const a=AT[tcur];
+  $$('#tch .chip').forEach(c=>c.classList.toggle('on',c.dataset.a===tcur));
+  $('#th').innerHTML=`${ic(a,40)}<div><b>${a.n}</b><small>${a.t} · ${KN[a.k]}</small></div>`;
+  const s=a.h.slice(-td),r=s[s.length-1]/s[0]-1;
+  $('#tp-px').textContent=price(a.p);
+  $('#tpc').className='tag '+cls(a.ch);
+  $('#tpc').textContent=pc(a.ch)+' за 24ч';
+  $('#tsrc').textContent=a.live?'Котировка в реальном времени':'Демо-котировка';
+  line($('#tcs'),{s:[{d:s,c:r>=0?'#15803d':'#d92d20',a:1}],l:L.slice(-td),vf:price,yf:v=>short(v)});
+  $('#t-cash').textContent=rub(AT.RUB?AT.RUB.q:0);
+  $('#t-pos').textContent=(a.q>0?`${fm(a.q,a.q<1?4:0)} шт. (${rub(a.val)})`:'0 шт.');
+  $('#t-buy').classList.toggle('on',tside==='buy');
+  $('#t-sell').classList.toggle('on',tside==='sell');
+  $('#t-sub').className='btn '+(tside==='buy'?'up':'dn');
+  $('#t-sub').textContent=(tside==='buy'?'Купить ':'Продать ')+a.t;
+  $('#t-qlbl').textContent=tbyRub?'Сумма в рублях, ₽':'Количество ('+a.t+')';
+  $('#t-mode').textContent=tbyRub?'Ввести в штуках':'Ввести в ₽';
+  trCalc();
+}
+function trHistory(){
+  $('#tr-cnt').textContent=TRADES.length?`Сделок: ${TRADES.length}`:'Сделок пока нет';
+  $('#tr-tb').innerHTML=TRADES.length?TRADES.map(x=>`<tr><td class="mut">${x.ts}</td><td><span class="tag ${x.side==='buy'?'up':'dn'}">${x.side==='buy'?'Покупка':'Продажа'}</span></td><td><b>${esc(x.t)}</b> <span class="mut">${esc(x.n)}</span></td><td class="r">${fm(x.q,x.q<1?4:2)}</td><td class="r">${price(x.px)}</td><td class="r hv"><b>${rub(x.sum)}</b></td></tr>`).join(''):'<tr><td colspan="6" class="mut" style="text-align:center;padding:26px">Выберите актив выше и совершите первую сделку в демо-режиме.</td></tr>';
+}
+DR.tr=()=>{
+  const trAssets=ALL.filter(a=>a.k!=='cash');
+  $('#tch').innerHTML=trAssets.map(a=>`<button class="chip ${a.t===tcur?'on':''}" data-a="${a.t}">${ic(a,22)}${a.t} <span class="${cls(a.ch)}" style="font-size:11px">${pc(a.ch,1)}</span></button>`).join('');
+  $$('#tch .chip').forEach(c=>c.onclick=()=>{tcur=c.dataset.a;$('#tq').value='';trSel()});
+  seg($('#tper'),td,d=>{td=d;trSel()});
+  trSel();trHistory();
+};
+$('#t-buy').onclick=()=>{tside='buy';$('#tq').value='';trSel()};
+$('#t-sell').onclick=()=>{tside='sell';$('#tq').value='';trSel()};
+$('#t-mode').onclick=()=>{tbyRub=!tbyRub;$('#tq').value='';trSel()};
+$('#tq').oninput=trCalc;
+$$('.qpct button').forEach(b=>b.onclick=()=>{
+  const k=+b.dataset.p,a=AT[tcur];if(!a)return;
+  if(tside==='buy'){
+    const cash=(AT.RUB?AT.RUB.q:0)*k;
+    $('#tq').value=tbyRub?Math.floor(cash):+(cash/a.p).toFixed(a.p>1000?4:0);
+  }else{
+    const q=(a.q||0)*k;
+    $('#tq').value=tbyRub?Math.floor(q*a.p):+(q).toFixed(a.q<1?4:0);
+  }
+  trCalc();
+});
+$('#tform').onsubmit=e=>{
+  e.preventDefault();
+  const a=AT[tcur];if(!a)return;
+  const raw=Math.max(0,+$('#tq').value||0);
+  const qty=tbyRub?(a.p>0?raw/a.p:0):raw;
+  const res=tradeDemo(tside,tcur,qty);
+  if(!res.ok)return toast(res.err);
+  $('#tq').value='';
+  toast(`${tside==='buy'?'Куплено':'Продано'} ${fm(qty,qty<1?4:2)} ${tcur} на ${rub(res.sum)}`);
+  DF=null;
+  trSel();trHistory();
+};
+
+function asel(){if(!AT[cur])cur=(A.find(a=>a.k!='cash')||A[0]).t;const a=AT[cur];$$('#ach .chip').forEach(c=>c.classList.toggle('on',c.dataset.a==cur));$('#ah').innerHTML=`${ic(a,40)}<div><b>${a.n}</b><small>${a.t} · ${KN[a.k]}</small></div>`;
+const s=a.h.slice(-ad),r=s[s.length-1]/s[0]-1;$('#ap').textContent=price(a.p);$('#apc').className='tag '+cls(r);$('#apc').textContent=pc(r)+' за период';
+line($('#acs'),{s:[{d:s,c:r>=0?'#15803d':'#d92d20',a:1}],l:L.slice(-ad),vf:price,yf:v=>short(v)});
+$('#ago-tr').style.display=a.k==='cash'?'none':'';
+$('#ago-tr').onclick=()=>{tcur=a.t;tab('tr')};
+$('#ainf').innerHTML=[['Количество',fm(a.q,a.q<1?3:0)],['Стоимость',rub(a.val)],['Средняя цена',price(a.avg)],['Прибыль / убыток',`<span class="${cls(a.pnl)}">${sg(a.pnl)}</span>`],['За 30 дней',`<span class="${cls(a.c30)}">${pc(a.c30,1)}</span>`],['Риск актива','●'.repeat(a.r)+'<span class="mut">'+'●'.repeat(5-a.r)+'</span>']].map(x=>`<div class="kv"><span>${x[0]}</span><b class="hv">${x[1]}</b></div>`).join('');
+$('#aai').innerHTML='<b style="color:var(--acc)">✦ AI:</b> '+(a.k=='cash'?'Свободные деньги лучше держать в фонде денежного рынка или коротких ОФЗ.':a.c30>.05?'За месяц актив заметно вырос. Не докупайте на пике, лучше частями.':a.c30<-.05?'Актив подешевел за месяц. Если вы верите в него на горизонте лет, это шанс для плановой покупки, но не превышайте лимит доли.':'Движение за месяц спокойное, действий не требуется.')}
+DR.as=()=>{$('#ach').innerHTML=A.map(a=>`<button class="chip" data-a="${a.t}">${ic(a,24)}${a.t}</button>`).join('');$$('#ach .chip').forEach(c=>c.onclick=()=>{cur=c.dataset.a;asel()});seg($('#aper'),ad,d=>{ad=d;asel()});asel();
+$('#atb').innerHTML=A.map(a=>`<tr data-a="${a.t}"><td><div class="asset">${ic(a)}<div><b>${a.t}</b><small>${a.n}</small></div></div></td><td class="r">${fm(a.q,a.q<1?3:0)}</td><td class="r hm">${price(a.avg)}</td><td class="r hv">${rub(a.val)}</td><td class="r ${cls(a.pnl)} hv">${sg(a.pnl)}</td><td class="r hm"><span class="tag ${cls(a.c30)}">${pc(a.c30,1)}</span></td></tr>`).join('');$$('#atb tr').forEach(r=>r.onclick=()=>{cur=r.dataset.a;asel();scrollTo({top:0,behavior:'smooth'})})};
+
+function cmp(){const X=A.filter(a=>sel.has(a.t));if(!X.length){$('#cc').innerHTML='<p class="mut" style="padding:40px;text-align:center">Выберите хотя бы один актив</p>';return}const S=X.map(a=>({c:a.c,d:a.h.slice(-cd).map(v=>(v/a.h[N-cd]-1)*100),a}));
+line($('#cc'),{s:S,l:L.slice(-cd),yf:v=>fm(v,0)+'%',tf:i=>`<span class="mut">${L[N-cd+i]}</span>`+S.map(s=>`<br><b style="color:${s.c}">${s.a.t}</b> ${(s.d[i]>=0?'+':'')+fm(s.d[i],1)}%`).join('')})}
+DR.an=()=>{const RS=risk(),SH=share();$('#cch').innerHTML=A.filter(a=>a.k!='cash').map(a=>`<button class="chip ${sel.has(a.t)?'on':''}" data-a="${a.t}">${ic(a,22)}${a.t}</button>`).join('');$$('#cch .chip').forEach(c=>c.onclick=()=>{const t=c.dataset.a;sel.has(t)?sel.delete(t):sel.add(t);c.classList.toggle('on');cmp()});seg($('#cper'),cd,d=>{cd=d;cmp()});cmp();
+const P=A.filter(a=>a.k!='cash').sort((a,b)=>b.pnl-a.pnl),mx=Math.max(...P.map(a=>Math.abs(a.pnl)),1);
+$('#pb').innerHTML=P.map(a=>`<div><div class="row" style="justify-content:space-between;font-size:13px;margin-bottom:6px"><span class="asset">${ic(a,20)}${a.t}</span><b class="${cls(a.pnl)} hv">${sg(a.pnl)}</b></div><div class="bar"><i style="width:${Math.abs(a.pnl)/mx*100}%;background:${a.pnl>=0?'#15803d':'#d92d20'}"></i></div></div>`).join('');
+const trisk=A.reduce((s,a)=>s+a.r*a.val,0)||1;
+$('#rg').innerHTML=`<div class="bal">${RS}<span class="mut" style="font-size:18px"> / 10</span></div><div class="bar mt8" style="height:10px;background:linear-gradient(90deg,#15803d,#d97706,#d92d20);position:relative;overflow:visible"><i style="position:absolute;left:calc(${RS*10}% - 7px);top:-4px;width:14px;height:18px;background:#fff;border:2px solid #1d1d1f;border-radius:4px"></i></div><p class="mut mt" style="font-size:14px">Вклад классов активов в риск:</p><div class="legend">${SH.map(x=>{const r=A.filter(a=>a.k==x.k).reduce((s,a)=>s+a.r*a.val,0)/trisk;return`<div><i style="background:${x.c}"></i>${x.n}<b>${fm(r*100,1)}%</b></div>`}).join('')}</div>`};
+
+const QQ=['Какой у меня риск?','Что с криптовалютой?','Что докупить?','Что на рынке?'];
+const ANS=[[/риск|опас/i,()=>`Риск портфеля ${risk()}/10. Волатильность за год ${fm(vol(PV)*100,1)}%, максимальная просадка ${pc(mdd(PV),1)}.`],[/крипт|btc|биткоин|eth/i,()=>{const cr=(share().find(x=>x.k=='crypto')||{w:0}).w;return`BTC за месяц ${pc(AT.BTC.c30,1)}, ETH ${pc(AT.ETH.c30,1)}. Доля крипты ${fm(cr*100,1)}%. Держите её в пределах 10–15% и не докупайте после резкого роста.`}],[/куп|влож|докуп|совет|делать/i,()=>`Свободный остаток ${rub(AT.RUB?AT.RUB.q:0)}. Для умеренного профиля логично распределять пополнение между ОФЗ и фондом на индекс МосБиржи.`],[/новост|рын/i,()=>`Последняя новость: «${NEWS[0].t}». Она изменила стоимость портфеля на ${sg(NEWS[0].v)}. ${NEWS[0].ai}`],[/облиг|офз/i,()=>'Облигации — это долг, по которому вам платят купоны. Когда ставки снижаются, их цена растёт. Они уменьшают просадки портфеля.']];
+function msg(t,c){const d=document.createElement('div');d.className='msg '+c;d.innerHTML=t;$('#chat').append(d);$('#chat').scrollTop=1e6;return d}
+function ask(q){if(!q.trim())return;msg(q.replace(/</g,'&lt;'),'u');const ty=msg('<span class="typing"><span></span><span></span><span></span></span>','b');aiAsk(q).then(r=>{if(r){ty.innerHTML=r;$('#chat').scrollTop=1e6;return}const a=ANS.find(x=>x[0].test(q));ty.innerHTML=a?a[1]():'Я учебный AI-советник и отвечаю на вопросы о вашем портфеле. Спросите про риск, криптовалюту, облигации или что докупить.';$('#chat').scrollTop=1e6})}
+DR.ai=()=>{if(!$('#chat').children.length)msg(`Здравствуйте! Я проанализировал портфель: баланс ${rub(TOT)}, риск ${risk()}/10. Главное сегодня: ${(USERPF?tips():TP)[0][2].toLowerCase()}.`,'b');
+$('#qq').innerHTML=QQ.map(q=>`<button class="chip t">${q}</button>`).join('');$$('#qq .chip').forEach(b=>b.onclick=()=>ask(b.textContent));
+const av=A.filter(a=>a.k!='cash').reduce((s,a)=>s+(a.h[N-1]/a.h[N-8]-1),0)/Math.max(1,A.filter(a=>a.k!='cash').length),fg=Math.round(Math.max(5,Math.min(95,50+av*600)));
+$('#mk').innerHTML=`<div><div class="row" style="justify-content:space-between"><span class="mut">Индекс настроения</span><b class="${fg>=50?'up':'dn'}">${fg} · ${fg>65?'жадность':fg>45?'нейтрально':'страх'}</b></div><div class="bar mt8"><i style="width:${fg}%;background:${fg>=50?'#15803d':'#d92d20'}"></i></div></div>`+ALL.filter(a=>a.k!='cash').map(a=>{const r=a.h[N-1]/a.h[N-8]-1;return`<div class="row" style="justify-content:space-between"><span class="asset">${ic(a,24)}${a.t}</span><span class="tag ${cls(r)}">${pc(r,1)} за 7 дн.</span></div>`}).join('');$('#tp2').innerHTML=(USERPF?tips():TP).map(tipH).join('')};
+$('#cf').onsubmit=e=>{e.preventDefault();ask($('#ci').value);$('#ci').value=''};
+DR.st=()=>{const p=['Консервативный','Умеренный','Агрессивный'];$('#spf').innerHTML=p.map((x,i)=>`<button class="chip t ${i==1?'on':''}">${x}</button>`).join('');$$('#spf .chip').forEach(b=>b.onclick=()=>{$$('#spf .chip').forEach(x=>x.classList.toggle('on',x==b));toast('Профиль: '+b.textContent)})};
+$('#st-reset').onclick=()=>{try{localStorage.removeItem('is_pf');localStorage.removeItem('is_tr')}catch(e){}location.hash='ov';location.reload()};
+
+$('#pfb').style.display=USERPF?'none':'';
+let DF=null;const draft=()=>DF||(DF=USERPF?JSON.parse(JSON.stringify(USERPF.h)):Object.fromEntries(A.map(a=>[a.t,{q:a.q,avg:+(+a.avg).toFixed(4)}])));
+const pp=(t,x)=>AT[t]?AT[t].p:+x.c.p;
+function pfRows(){const H=draft(),E=Object.entries(H);let s=0;
+ $('#pft2').innerHTML=E.length?E.map(([t,x])=>{const a=AT[t]||{c:'#6e6e73',s:t[0],n:x.c.n},v=x.q*pp(t,x);s+=v;return`<tr><td><div class="asset">${ic(a)}<div><b>${esc(t)}</b><small>${esc(a.n)}</small></div></div></td><td class="r"><input class="pin" data-t="${t}" data-f="q" type="number" min="0" step="any" value="${x.q}"></td><td class="r"><input class="pin" data-t="${t}" data-f="avg" type="number" min="0" step="any" value="${x.avg||''}" placeholder="${fm(pp(t,x),2)}"></td><td class="r hm">${rub(v)}</td><td class="r"><button class="xb" type="button" data-x="${t}" title="Удалить">×</button></td></tr>`}).join(''):'<tr><td colspan="5" class="mut" style="text-align:center;padding:30px">Портфель пуст. Добавьте первый актив выше.</td></tr>';
+ $('#pfsum').textContent=E.length?'Итого: '+rub(s):'';
+ $$('#pft2 .pin').forEach(i=>i.onchange=()=>{H[i.dataset.t][i.dataset.f]=Math.max(0,+i.value||0);pfRows()});
+ $$('#pft2 [data-x]').forEach(b=>b.onclick=()=>{delete H[b.dataset.x];pfRows()})}
+function pfUpd(){const v=$('#pfs').value,a=AT[v];$('#pfc').classList.toggle('on',v=='_');$('#pfv').placeholder=a?'сейчас '+fm(a.p,a.p<10?2:0):'необязательно'}
+DR.pf=()=>{$('#pfm').textContent=USERPF?`Сейчас графики и советы строятся по вашему портфелю (${A.length} акт.). Измените состав и нажмите «Сохранить».`:'Сейчас показан демо-портфель. Удалите лишнее, добавьте свои активы и нажмите «Сохранить».';
+ const v=$('#pfs').value;$('#pfs').innerHTML=ALL.filter(a=>!a.cu).map(a=>`<option value="${a.t}">${a.t} · ${esc(a.n)}</option>`).join('')+'<option value="_">Другой актив…</option>';if(v)$('#pfs').value=v;
+ $('#pfk').innerHTML=Object.entries(KN).filter(k=>k[0]!='cash').map(([k,n])=>`<option value="${k}">${n}</option>`).join('');pfUpd();pfRows()};
+$('#pfs').onchange=pfUpd;
+$('#pfa').onsubmit=e=>{e.preventDefault();const H=draft();let t=$('#pfs').value,c=null;const q=+$('#pfq').value,v=+$('#pfv').value;
+ if(!(q>0))return toast('Укажите количество больше нуля');
+ if(t=='_'){t=$('#pft').value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,10);const n=clean($('#pfn').value),p=+$('#pfp').value;
+  if(!t||!n||!(p>0))return toast('Для своего актива нужны название, тикер латиницей и цена');if(AT[t]&&!AT[t].cu)return toast('Этот актив уже есть в списке');c={n,k:$('#pfk').value,p}}
+ const o=H[t];if(o&&!c){if(v>0)o.avg=+((o.avg*o.q+v*q)/(o.q+q)).toFixed(4);o.q=+(o.q+q).toFixed(8)}
+ else H[t]={q,avg:v>0?v:(c?c.p:+AT[t].p.toFixed(4)),...(c?{c}:{})};
+ $('#pfq').value=$('#pfv').value='';pfRows();toast(t+' добавлен. Нажмите «Сохранить и пересчитать»')};
+$('#pfsave').onclick=()=>{const H=draft();Object.keys(H).forEach(t=>{if(!(H[t].q>0))delete H[t]});if(!Object.keys(H).length)return toast('Добавьте хотя бы один актив');
+ try{localStorage.setItem('is_pf',JSON.stringify({v:1,h:H}))}catch(e){return toast('Браузер не разрешил сохранить данные')}location.hash='ov';location.reload()};
+$('#pfreset').onclick=()=>{try{localStorage.removeItem('is_pf')}catch(e){}location.hash='ov';location.reload()};
+
+onLiveUpdate(()=>{
+  $('#rk').textContent=risk();
+  const id=activeTab();
+  if(id==='ov')DR.ov();
+  else if(id==='tr')trSel();
+  else if(id==='as')asel();
+  else if(id==='an')DR.an();
+  else if(id==='ai'){
+    const av=A.filter(a=>a.k!='cash').reduce((s,a)=>s+(a.h[N-1]/a.h[N-8]-1),0)/Math.max(1,A.filter(a=>a.k!='cash').length),fg=Math.round(Math.max(5,Math.min(95,50+av*600)));
+    $('#mk').innerHTML=`<div><div class="row" style="justify-content:space-between"><span class="mut">Индекс настроения</span><b class="${fg>=50?'up':'dn'}">${fg} · ${fg>65?'жадность':fg>45?'нейтрально':'страх'}</b></div><div class="bar mt8"><i style="width:${fg}%;background:${fg>=50?'#15803d':'#d92d20'}"></i></div></div>`+ALL.filter(a=>a.k!='cash').map(a=>{const r=a.h[N-1]/a.h[N-8]-1;return`<div class="row" style="justify-content:space-between"><span class="asset">${ic(a,24)}${a.t}</span><span class="tag ${cls(r)}">${pc(r,1)} за 7 дн.</span></div>`}).join('');
+  }
+});
+
+tab(activeTab());
+});</script></body></html>
